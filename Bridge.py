@@ -1,11 +1,12 @@
 from flask import Flask
 from flask import request
+from flask_cors import CORS
 
 from Handler import BridgeHandler
 
 
 app = Flask(__name__)
-
+CORS(app)
 
 ### Debug Api ###
 # @app.route('/GetAllVariables') ##
@@ -52,15 +53,12 @@ def sendCheckCode():
     else:
         return {'status': False}
 
-@app.route('/GetCodeStatus') ##
+@app.route('/GetStatus') ##
 def getCodeStatus():
     apiKey = request.args.get('apiKey')
 
     if BridgeHandler.checkApiKeyStatus(apiKey):
-        if BridgeHandler.getDeviceStatus() == 'Connected':
-            return {'status': True}
-
-    return {'status': False}
+        return {'status': BridgeHandler.getDeviceStatus()}
 
 @app.route('/SetNowSettings') ##
 def setNowSettings():
@@ -168,6 +166,12 @@ def getDeviceAlarms():
     else:
         return {'status': False}
 
+@app.route('/GetDeviceApiKey') ##
+def getDeviceApiKey():
+    if BridgeHandler.getDeviceStatus() == 'Connected':
+        return {'status': True, 'apiKey': BridgeHandler.getDeviceNowAlarms()} 
+    else:
+        return {'status': False}
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")

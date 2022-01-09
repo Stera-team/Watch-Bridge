@@ -4,9 +4,9 @@ from json import loads
 
 class BridgeHandler():
     DEVICE_STATUS         = 'Not Connected'
-    DEVICE_API_KEY        = None
+    DEVICE_API_KEY        = 'ROHZKDBN'
     DEVICE_CHECK_KEY_HASH = None
-    DEVICE_NOW_SETTINGS   = None
+    DEVICE_NOW_SETTINGS   = {"is12HourFormat": False, "cryptoTickers": ["Bitcoin", "Cardano"], "alarms": [ {"name": "wake up", "time": "12:00"} ]}
     DEVICE_NOW_ALARMS     = None
 
     @staticmethod
@@ -24,6 +24,10 @@ class BridgeHandler():
     @staticmethod
     def setDeviceApiKey(key):
         BridgeHandler.DEVICE_API_KEY = key
+
+    @staticmethod
+    def getDeviceApiKey():
+        return BridgeHandler.DEVICE_API_KEY
 
     @staticmethod
     def getDeviceCheckKeyHash():
@@ -75,7 +79,9 @@ class BridgeHandler():
             BridgeHandler.DEVICE_STATUS = 'Connected'
             return True
         else:
+            BridgeHandler.DEVICE_STATUS = 'Not Connected'
             BridgeHandler.DEVICE_CHECK_KEY_HASH = None
+
             return False
         
         
